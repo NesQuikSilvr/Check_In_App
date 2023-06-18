@@ -1,17 +1,23 @@
 import { useState } from 'react';
 import Student from './Student.tsx'
+import Button from './Button.tsx';
 
-interface Roster {
+interface RosterProp {
     course: string;
     students: Student[];
     onSelectStudent: (item: Student) => void;
 }
 
-function ListGroup({course, students, onSelectStudent}: Roster) {
+function Roster({course, students, onSelectStudent}: RosterProp) {
     const [selectedIndex, setSelectedIndex] = useState(-1);
 
     const getMessage = () => {
-        return students.length === 0 && <p>No item found</p>;
+        return students.length === 0 && (
+            <>
+                <p>No students on roster</p>
+                <Button label="Add a student" onClick={() => console.log("Added student")}/>
+            </>
+        );
     }
 
     return (
@@ -38,4 +44,4 @@ function ListGroup({course, students, onSelectStudent}: Roster) {
     );
 }
 
-export default ListGroup;
+export default Roster;

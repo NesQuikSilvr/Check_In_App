@@ -12,7 +12,7 @@ class Student {
     }
 
     public toString = () : string => {
-        return this.first_name + " | " + this.last_name + " | " + this.user_id;
+        return this.last_name + ", " + this.first_name + " | " + this.user_id;
     }
 }
 
