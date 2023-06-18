@@ -1,10 +1,19 @@
+import { useState } from 'react'
 import Roster from './components/Roster';
 import Classroom from './components/Classroom';
 import Student from './components/Student';
-//import './App.css'
+import './App.css'
 
 const handleSelectStudent = (item: Student) => {
   console.log(item.toString());
+}
+
+function handleSelectClassroom(classroom: Classroom) {
+  setDisplayedClass(classroom);
+}
+
+function setDisplayedClass(classroom: Classroom) {
+  
 }
 
 function App() {
@@ -26,37 +35,18 @@ function App() {
 
   let classrooms = [class1, class2];
 
+  const [displayedClass, setDisplayedClass] = useState(0);
+
   return (
-    <div>
-      <ul>
-        <li><a className="active" href="#home">Home</a></li>
-        <li><a href="#news">News</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><a href="#about">About</a></li>
-      </ul>
-
-      <div className="container text-center">
-        <div className="row">
-          <div className="col">
-            1 of 3
-          </div>
-          <div className="col-6">
-            2 of 3 (wider)
-          </div>
-          <div className="col">
-            3 of 3
-          </div>
-        </div>
-      </div>
-
+    <div className="main">
       <div className="btn-group">
-        <button type="button" className="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <button type="button" className="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown">
           Classrooms
         </button>
         <ul className="dropdown-menu">
           {
             classrooms.map( classroom =>
-              <li><a className="dropdown-item" href="#">{classroom.name}</a></li>
+              <li><a className="dropdown-item" href="#" onClick={() => handleSelectClassroom(classroom)}>{classroom.name}</a></li>
             )
           }
           <li><hr className="dropdown-divider"/></li>
@@ -64,8 +54,26 @@ function App() {
         </ul>
       </div>
 
-      <Roster course={class1.name} students={class1.students} onSelectStudent={handleSelectStudent}/>
-      <Roster course={class2.name} students={class2.students} onSelectStudent={handleSelectStudent}/>
+      <Roster course={classrooms[displayedClass].name} students={classrooms[displayedClass].students} onSelectStudent={handleSelectStudent}/>
+
+      <form>
+        <label>First Name</label>
+        <input type="text" id="fname" name="firstname" placeholder="Student first name"/>
+
+        <label>Last Name</label>
+        <input type="text" id="lname" name="lastname" placeholder="Student last name"/>
+
+        <label>Classroom</label>
+        <select id="country" name="country">
+          {
+            classrooms.map( classroom =>
+              <option value={classroom.name}>{classroom.name}</option>
+            )
+          }
+        </select>
+      
+        <input type="submit" value="Add student"/>
+      </form>
     </div>
   );
 }
