@@ -13,7 +13,7 @@ function handleSelectClassroom(classroom: Classroom) {
 }
 
 function setDisplayedClass(classroom: Classroom) {
-  
+  console.log(classroom.toString());
 }
 
 function App() {
@@ -35,7 +35,7 @@ function App() {
 
   let classrooms = [class1, class2];
 
-  const [displayedClass, setDisplayedClass] = useState(0);
+  const [displayedClass, setDisplayedClass] = useState<Classroom | null>(null);
 
   return (
     <div className="main">
@@ -46,7 +46,7 @@ function App() {
         <ul className="dropdown-menu">
           {
             classrooms.map( classroom =>
-              <li><a className="dropdown-item" href="#" onClick={() => handleSelectClassroom(classroom)}>{classroom.name}</a></li>
+              <li key={classroom.toString()}><a className="dropdown-item" href="#" onClick={() => setDisplayedClass(classroom)}>{classroom.name}</a></li>
             )
           }
           <li><hr className="dropdown-divider"/></li>
@@ -54,9 +54,9 @@ function App() {
         </ul>
       </div>
 
-      <Roster course={classrooms[displayedClass].name} students={classrooms[displayedClass].students} onSelectStudent={handleSelectStudent}/>
+      {displayedClass !== null && <Roster classroom={displayedClass} onSelectStudent={handleSelectStudent}/>}
 
-      <form>
+      <form style={{margin: "20px 50px"}}>
         <label>First Name</label>
         <input type="text" id="fname" name="firstname" placeholder="Student first name"/>
 
@@ -67,7 +67,7 @@ function App() {
         <select id="country" name="country">
           {
             classrooms.map( classroom =>
-              <option value={classroom.name}>{classroom.name}</option>
+              <option key={classroom.toString()} value={classroom.name}>{classroom.name}</option>
             )
           }
         </select>
