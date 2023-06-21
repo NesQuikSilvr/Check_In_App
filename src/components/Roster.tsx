@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import Classroom from './Classroom.tsx';
 import Student from './Student.tsx'
+import { Status } from './Student.tsx';
 import Button from './Button.tsx';
+import Timer from './Timer.tsx';
+import '../App.css';
 
 interface RosterProp {
     classroom: Classroom;
@@ -11,7 +14,7 @@ interface RosterProp {
 function Roster({classroom, onSelectStudent}: RosterProp) {
     const [selectedIndex, setSelectedIndex] = useState(-1);
 
-    const getMessage = () => {
+    const checkRoster = () => {
         return classroom.students.length === 0 && (
             <>
                 <p>No students on roster</p>
@@ -21,14 +24,15 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
     }
 
     return (
-        <div style={{margin: "20px 100px", width: "75%", alignContent: "center", background: "#ffffff", padding: "25px", borderRadius: "10px"}}>
-            <h1>{classroom.toString()}</h1>
-            {getMessage()}
+        <div className="roster">
+            <h1>{classroom.name}</h1>
+            {checkRoster()}
             <ul className="list-group">
                 {
                     classroom.students.map((student, index) =>
                         <li
-                            className={selectedIndex === index ? "list-group-item active" : "list-group-item"}
+                            style={{display: "flex"}}
+                            className={selectedIndex === index ? "list-group-item roster-row" : "list-group-item roster-row"}
                             key={student.toString()}
                             onClick={() => {
                                 setSelectedIndex(index)
@@ -36,6 +40,7 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
                             }}
                         >
                             {student.toString()}
+                            {student.status === Status.Checked_out && <Timer/>}
                         </li>
                     )
                 }
