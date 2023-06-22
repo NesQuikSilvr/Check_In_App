@@ -11,7 +11,7 @@ class Student {
     password: string;
     status: Status;
 
-    constructor(first_name: string, last_name: string, user_id: string, password: string, status: Status=Status.Present) {
+    constructor(first_name: string, last_name: string, user_id: string, password: string, status: Status=Status.Checked_out) {
             this.first_name = first_name;
             this.last_name = last_name;
             this.user_id = user_id;

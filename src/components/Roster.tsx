@@ -14,7 +14,7 @@ interface RosterProp {
 function Roster({classroom, onSelectStudent}: RosterProp) {
     const [selectedIndex, setSelectedIndex] = useState(-1);
 
-    const checkRoster = () => {
+    function checkRoster() {
         return classroom.students.length === 0 && (
             <>
                 <p>No students on roster</p>
@@ -31,15 +31,17 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
                 {
                     classroom.students.map((student, index) =>
                         <li
-                            style={{display: "flex"}}
-                            className={selectedIndex === index ? "list-group-item roster-row" : "list-group-item roster-row"}
+                            style={{display: "flex", alignSelf: ""}}
+                            className={selectedIndex === index ? "list-group-item active roster-row" : "list-group-item roster-row"}
                             key={student.toString()}
                             onClick={() => {
                                 setSelectedIndex(index)
                                 onSelectStudent(student)
                             }}
                         >
-                            {student.toString()}
+                            <div>
+                                {student.toString()}
+                            </div>
                             {student.status === Status.Checked_out && <Timer/>}
                         </li>
                     )
