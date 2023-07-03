@@ -21,14 +21,19 @@ function Timer() {
         setTimerActive(true);
         
         timeStart = Date.now();
+        setCurrentTime( Date.now() - timeStart );
 
-        setInterval( () => {
+        let interval = setInterval( () => {
             setCurrentTime( Date.now() - timeStart );
-        }, 250)
+        }, 250);
+
+        setTimer(interval);
     }
 
     function resetTimer() {
         setTimerActive(false);
+
+        clearInterval(timer);
     }
 
     function toggleTimer() {
