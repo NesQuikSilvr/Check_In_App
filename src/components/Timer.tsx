@@ -1,43 +1,55 @@
 import { useState, useEffect } from "react";
 import { LuAlarmClock } from "react-icons/lu"
 
+function formatTime(date : Date) {
+
+    return date.getMinutes() + ":" + date.getSeconds();
+}
 
 function Timer() {
 
     const [timerActive, setTimerActive] = useState(false);
-    const [currentTime, setCurrentTime] = useState(Date.now());
-    const [timeStart, setTimeStart] = useState(Date.now());
+    const [currentTime, setCurrentTime] = useState(0);
+    //const [timeStart, setTimeStart] = useState(Date.now());
 
-    function startTimer() {
-        setTimeStart(Date.now());
-        console.log("Started timer" + timeStart);
-        setCurrentTime(0);
+    let timeStart = Date.now();
+
+    const [timer, setTimer] = useState<ReturnType<typeof setInterval> | 0>(0);
+
+
+    const startTimer = () => {
         setTimerActive(true);
+        
+        timeStart = Date.now();
+
+        setInterval( () => {
+            setCurrentTime( Date.now() - timeStart );
+        }, 250)
     }
 
-    let timer : ReturnType<typeof setInterval> = 0;
-    
-        useEffect( () => {
-            if (timerActive) {
-                timer = setInterval( () => {
-                    setCurrentTime( Date.now() - timeStart );
-                }, 250);
-            }
+    function resetTimer() {
+        setTimerActive(false);
+    }
 
-            return () => {
-                clearInterval(timer);
-            }
-        }, [currentTime])
+    function toggleTimer() {
+        if (timerActive) {
+            resetTimer();
+        }
+        else {
+            startTimer();
+        }
+    }
 
     return (
         <>
-            <button type="button" className={"btn btn-outline-dark"} onClick={ startTimer }>
+            <button type="button" className={"btn btn-outline-dark"} onClick={ toggleTimer }>
                 <div style={{display: "flex"}} align-content="flex-end">
                     <div style={{margin: "0px 5px", position: "relative", top: "-2px"}}>
                         <LuAlarmClock size={20}/>
                     </div>
                     <div style={{margin: "0px 5px"}}>
-                        {new Date(currentTime).getMinutes() + ":" + new Date(currentTime).getSeconds()}
+                        {timerActive && formatTime(new Date(currentTime))}
+                        {!timerActive && "--:--"}
                     </div>
                 </div>
             </button>
