@@ -22,7 +22,14 @@ class Student {
     public toString = () : string => {
         return this.last_name + ", " + this.first_name + " | " + this.user_id + " | " + Status[this.status];
     }
+
+    public asRosterElement () {
+        return (
+            <>
+                {this.toString()}
+            </>
+        )
+    }
 }
 
-export { Status }
-export default Student;
+export { Status, Student }

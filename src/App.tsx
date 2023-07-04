@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Roster from './components/Roster';
 import Classroom from './components/Classroom';
-import Student from './components/Student';
+import { Student } from './components/Student';
 import { Status } from './components/Student';
 import './App.css'
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Classroom from './Classroom.tsx';
-import Student from './Student.tsx'
+import { Student } from './Student.tsx'
 import { Status } from './Student.tsx';
 import Button from './Button.tsx';
 import Timer from './Timer.tsx';
@@ -40,7 +40,7 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
                             }}
                         >
                             <div>
-                                {student.toString()}
+                                {student.asRosterElement()}
                             </div>
                             {student.status === Status.Checked_out && <Timer/>}
                         </li>
