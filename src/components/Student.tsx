@@ -1,5 +1,4 @@
-import TimerComponent from './Timer.tsx';
-import '../App.css';
+import { TimerComponent } from './Timer.tsx';
 
 enum Status {
     PRESENT = "Present",
@@ -12,18 +11,22 @@ class Student {
     last_name: string;
     user_id: string;
     password: string;
-    status: Status;
+    private status: Status;
 
-    constructor(first_name: string, last_name: string, user_id: string, password: string, status: Status=Status.CHECKED_OUT) {
+    constructor(first_name: string, last_name: string, user_id: string, password: string) {
             this.first_name = first_name;
             this.last_name = last_name;
             this.user_id = user_id;
             this.password = password;
-            this.status = status;
+            this.status = Status.PRESENT;
     }
 
     public toString() {
         return this.last_name + ", " + this.first_name + " | " + this.user_id + " | " + this.status;
+    }
+
+    public getStatus() {
+        return this.status;
     }
 
     public checkOut() {
@@ -35,7 +38,7 @@ const StudentRosterElement: React.FC<{ student: Student }> = ({student}) => {
     return (
         <>
             {student.toString()}
-            {student.status === Status.CHECKED_OUT && <TimerComponent/>}
+            {student.getStatus() === Status.CHECKED_OUT && <TimerComponent/>}
         </>
     );
 }

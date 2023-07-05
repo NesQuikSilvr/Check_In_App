@@ -1,4 +1,4 @@
-import Student from "./Student";
+import { Student } from "./Student";
 
 class Classroom {
     public name: string;
@@ -22,9 +22,12 @@ class Classroom {
         if (index > -1) {
             this.students.splice(index, 1);
         }
+        else {
+            console.log("Can't remove non-existent student");
+        }
     }
 
-    public toString = () : string => {
+    public toString() : string {
         return this.name;
     }
 }

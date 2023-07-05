@@ -3,7 +3,6 @@ import Roster from './components/Roster';
 import Classroom from './components/Classroom';
 import { Student } from './components/Student';
 import { Status } from './components/Student';
-import './App.css'
 
 function handleSelectStudent(item: Student) {
   console.log(item.toString());
@@ -14,7 +13,8 @@ function App() {
     new Student("Johnny", "Nguyen", "1234", "asdf"),
     new Student("Peter", "Parker", "0022", "poop"),
     new Student("Miles", "Morales", "1111", "butt"),
-    new Student("Gwen", "Stacy", "9999", "beep", Status.CHECKED_OUT)
+    new Student("Gwen", "Stacy", "9999", "beep", Status.CHECKED_OUT),
+    new Student("Peni", "Parker", "4444", "weeb")
   ];
 
   let class1 = new Classroom("Gateway to Tech");

@@ -67,7 +67,7 @@ function TimerComponent() {
 
     return (
         <>
-            <button type="button" className={"btn btn-outline-dark"} onClick={ toggleTimer }>
+            <button type="button" className={"btn btn-outline-dark btn-sm"} onClick={ toggleTimer }>
                 <div style={{display: "flex"}} align-content="flex-end">
                     <div style={{margin: "0px 5px", position: "relative", top: "-2px"}}>
                         <LuAlarmClock size={20}/>
@@ -82,4 +82,4 @@ function TimerComponent() {
     )
 }
 
-export default TimerComponent;
+export { TimerComponent };
