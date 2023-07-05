@@ -24,7 +24,7 @@ function formatTime(date : Date) {
     return time;
 }
 
-function Timer() {
+function TimerComponent() {
 
     const [timerIsActive, setTimerActive] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
@@ -82,4 +82,4 @@ function Timer() {
     )
 }
 
-export default Timer;
+export default TimerComponent;

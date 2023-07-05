@@ -1,7 +1,10 @@
+import TimerComponent from './Timer.tsx';
+import '../App.css';
+
 enum Status {
-    Present,
-    Absent,
-    Checked_out
+    PRESENT = "Present",
+    ABSENT = "Absent",
+    CHECKED_OUT = "Checked out"
 }
 
 class Student {
@@ -11,7 +14,7 @@ class Student {
     password: string;
     status: Status;
 
-    constructor(first_name: string, last_name: string, user_id: string, password: string, status: Status=Status.Checked_out) {
+    constructor(first_name: string, last_name: string, user_id: string, password: string, status: Status=Status.CHECKED_OUT) {
             this.first_name = first_name;
             this.last_name = last_name;
             this.user_id = user_id;
@@ -19,17 +22,22 @@ class Student {
             this.status = status;
     }
 
-    public toString = () : string => {
-        return this.last_name + ", " + this.first_name + " | " + this.user_id + " | " + Status[this.status];
+    public toString() {
+        return this.last_name + ", " + this.first_name + " | " + this.user_id + " | " + this.status;
     }
 
-    public asRosterElement () {
-        return (
-            <>
-                {this.toString()}
-            </>
-        )
+    public checkOut() {
+        this.status = Status.CHECKED_OUT;
     }
 }
 
-export { Status, Student }
+const StudentRosterElement: React.FC<{ student: Student }> = ({student}) => {
+    return (
+        <>
+            {student.toString()}
+            {student.status === Status.CHECKED_OUT && <TimerComponent/>}
+        </>
+    );
+}
+
+export { Status, Student, StudentRosterElement }

@@ -14,7 +14,7 @@ function App() {
     new Student("Johnny", "Nguyen", "1234", "asdf"),
     new Student("Peter", "Parker", "0022", "poop"),
     new Student("Miles", "Morales", "1111", "butt"),
-    new Student("Gwen", "Stacy", "9999", "beep", Status.Checked_out)
+    new Student("Gwen", "Stacy", "9999", "beep", Status.CHECKED_OUT)
   ];
 
   let class1 = new Classroom("Gateway to Tech");

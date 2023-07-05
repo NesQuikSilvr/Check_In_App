@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import Classroom from './Classroom.tsx';
-import { Student } from './Student.tsx'
-import { Status } from './Student.tsx';
+import { Student, StudentRosterElement } from './Student.tsx'
 import Button from './Button.tsx';
-import Timer from './Timer.tsx';
 import '../App.css';
 
 interface RosterProp {
@@ -31,7 +29,7 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
                 {
                     classroom.students.map((student, index) =>
                         <li
-                            style={{display: "flex", alignSelf: ""}}
+                            style={{display: "flex"}}
                             className={selectedIndex === index ? "list-group-item active roster-row" : "list-group-item roster-row"}
                             key={student.toString()}
                             onClick={() => {
@@ -39,10 +37,7 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
                                 onSelectStudent(student)
                             }}
                         >
-                            <div>
-                                {student.asRosterElement()}
-                            </div>
-                            {student.status === Status.Checked_out && <Timer/>}
+                            <StudentRosterElement student={ student } />
                         </li>
                     )
                 }
