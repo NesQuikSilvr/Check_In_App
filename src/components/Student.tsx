@@ -32,14 +32,12 @@ class Student {
     }
 
     public checkOut() {
-        //if (this.status == Status.CHECKED_OUT) { return; }
-
+        
         this.status = Status.CHECKED_OUT;
     }
 
     public checkIn() {
-        //if (this.status == Status.PRESENT) { return; }
-        console.log("check in");
+
         this.status = Status.PRESENT;
     }
 }
@@ -47,10 +45,15 @@ class Student {
 const StudentRosterRow: React.FC<{ student: Student }> = ({student}) => {
     const [status, setStatus] = useState(student.getStatus());
 
-    useEffect( () => {
+    const handleCheckIn = () => {
+        student.checkIn();
         setStatus(student.getStatus());
-        console.log(student.first_name + "\'s status was changed to: " + student.getStatus());
-    }, [student.getStatus()])
+    }
+
+    const handleCheckOut = () => {
+        student.checkOut();
+        setStatus(student.getStatus());
+    }
 
     return (
         <>
@@ -58,11 +61,10 @@ const StudentRosterRow: React.FC<{ student: Student }> = ({student}) => {
             <td>{student.first_name}</td>
             <td>{student.last_name}</td>
             <td className="roster-row" style={{fontStyle: "italic"}}>
-                { student.getStatus() + " is real status"}
-                { status }
-                { status === Status.CHECKED_OUT
-                ? <Button label="Check In" onClick={ () => student.checkIn() } />
-                : <Button label="Check Out" onClick={ () => student.checkOut() } />
+                { student.getStatus() }
+                { student.getStatus() === Status.CHECKED_OUT
+                  ? <Button label="Check In" onClick={ () => handleCheckIn() } />
+                  : <Button label="Check Out" onClick={ () => handleCheckOut() } />
                 }
             </td>
         </>
