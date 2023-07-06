@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useInsertionEffect, useState } from 'react';
 import Classroom from './Classroom.tsx';
-import { Status, Student } from './Student.tsx'
+import { Status, Student, StudentRosterRow } from './Student.tsx'
 import { TimerComponent } from './Timer.tsx';
+import Button from './Button.tsx';
 
 interface RosterProp {
     classroom: Classroom;
@@ -44,13 +45,7 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
                                 onSelectStudent(student)
                             }}
                         >
-                            <td>{student.user_id}</td>
-                            <td>{student.first_name}</td>
-                            <td>{student.last_name}</td>
-                            <td className="roster-row" style={{fontStyle: "italic"}}>
-                                {student.getStatus()}
-                                {student.getStatus() === Status.CHECKED_OUT && <TimerComponent/>}
-                            </td>
+                            <StudentRosterRow student={ student }/>
                         </tr>
                         )
                     }

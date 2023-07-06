@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import Roster from './components/Roster';
 import Classroom from './components/Classroom';
-import { Student } from './components/Student';
-import { Status } from './components/Student';
+import { Status, Student } from './components/Student';
+import Button from './components/Button';
 
 function handleSelectStudent(item: Student) {
   console.log(item.toString());
@@ -13,7 +13,7 @@ function App() {
     new Student("Johnny", "Nguyen", "1234", "asdf"),
     new Student("Peter", "Parker", "0022", "poop"),
     new Student("Miles", "Morales", "1111", "butt"),
-    new Student("Gwen", "Stacy", "9999", "beep", Status.CHECKED_OUT),
+    new Student("Gwen", "Stacy", "9999", "beep"),
     new Student("Peni", "Parker", "4444", "weeb")
   ];
 
@@ -22,6 +22,7 @@ function App() {
   class1.addStudent(new Student("Miguel", "O'Hara", "2099", "meep"));
   class1.removeStudent(class1.students[0]);
 
+  students[3].status = Status.CHECKED_OUT;
 
   let class2 = new Classroom("Math");
 

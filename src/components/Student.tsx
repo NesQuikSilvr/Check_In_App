@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react';
 import { TimerComponent } from './Timer.tsx';
+import Button from './Button.tsx';
 
 enum Status {
     PRESENT = "Present",
@@ -11,7 +13,7 @@ class Student {
     last_name: string;
     user_id: string;
     password: string;
-    private status: Status;
+    status: Status;
 
     constructor(first_name: string, last_name: string, user_id: string, password: string) {
             this.first_name = first_name;
@@ -30,17 +32,41 @@ class Student {
     }
 
     public checkOut() {
+        //if (this.status == Status.CHECKED_OUT) { return; }
+
         this.status = Status.CHECKED_OUT;
+    }
+
+    public checkIn() {
+        //if (this.status == Status.PRESENT) { return; }
+        console.log("check in");
+        this.status = Status.PRESENT;
     }
 }
 
-const StudentRosterElement: React.FC<{ student: Student }> = ({student}) => {
+const StudentRosterRow: React.FC<{ student: Student }> = ({student}) => {
+    const [status, setStatus] = useState(student.getStatus());
+
+    useEffect( () => {
+        setStatus(student.getStatus());
+        console.log(student.first_name + "\'s status was changed to: " + student.getStatus());
+    }, [student.getStatus()])
+
     return (
         <>
-            {student.toString()}
-            {student.getStatus() === Status.CHECKED_OUT && <TimerComponent/>}
+            <td>{student.user_id}</td>
+            <td>{student.first_name}</td>
+            <td>{student.last_name}</td>
+            <td className="roster-row" style={{fontStyle: "italic"}}>
+                { student.getStatus() + " is real status"}
+                { status }
+                { status === Status.CHECKED_OUT
+                ? <Button label="Check In" onClick={ () => student.checkIn() } />
+                : <Button label="Check Out" onClick={ () => student.checkOut() } />
+                }
+            </td>
         </>
     );
 }
 
-export { Status, Student, StudentRosterElement }
+export { Status, Student, StudentRosterRow }
