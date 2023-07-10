@@ -2,11 +2,6 @@ import { useState } from 'react'
 import Roster from './components/Roster';
 import Classroom from './components/Classroom';
 import { Status, Student } from './components/Student';
-import Button from './components/Button';
-
-function handleSelectStudent(item: Student) {
-  console.log(item.toString());
-}
 
 function App() {
   let students = [
@@ -22,7 +17,7 @@ function App() {
   class1.addStudent(new Student("Miguel", "O'Hara", "2099", "meep"));
   class1.removeStudent(class1.students[0]);
 
-  students[3].status = Status.CHECKED_OUT;
+  students[3].status = Status.ABSENT;
 
   let class2 = new Classroom("Math");
 
@@ -54,7 +49,7 @@ function App() {
       </div>
 
       {/* roster display */}
-      {displayedClass !== null && <Roster classroom={displayedClass} onSelectStudent={handleSelectStudent}/>}
+      {displayedClass !== null && <Roster classroom={displayedClass} onSelectStudent={ () => {} }/>}
       
     </div>
   );

@@ -1,6 +1,7 @@
+import React from 'react'
 import { useState, useEffect } from 'react';
-import { TimerComponent } from './Timer.tsx';
 import Button from './Button.tsx';
+import { TimerComponent } from './Timer.tsx';
 
 enum Status {
     PRESENT = "Present",
@@ -32,28 +33,27 @@ class Student {
     }
 
     public checkOut() {
-        
+        console.log(this.first_name + " checked out")
         this.status = Status.CHECKED_OUT;
     }
 
     public checkIn() {
-
+        console.log(this.first_name + " checked in")
         this.status = Status.PRESENT;
     }
 }
 
-const StudentRosterRow: React.FC<{ student: Student }> = ({student}) => {
+interface RosterRowProp {
+    student: Student
+}
+
+const StudentRosterRow = ( { student }: RosterRowProp) => {
     const [status, setStatus] = useState(student.getStatus());
 
-    const handleCheckIn = () => {
-        student.checkIn();
-        setStatus(student.getStatus());
-    }
-
-    const handleCheckOut = () => {
-        student.checkOut();
-        setStatus(student.getStatus());
-    }
+    useEffect( () => {
+        console.log("set student status")
+        student.status = status;
+    }, [status])
 
     return (
         <>
@@ -61,11 +61,13 @@ const StudentRosterRow: React.FC<{ student: Student }> = ({student}) => {
             <td>{student.first_name}</td>
             <td>{student.last_name}</td>
             <td className="roster-row" style={{fontStyle: "italic"}}>
-                { student.getStatus() }
-                { student.getStatus() === Status.CHECKED_OUT
-                  ? <Button label="Check In" onClick={ () => handleCheckIn() } />
-                  : <Button label="Check Out" onClick={ () => handleCheckOut() } />
-                }
+                <div style={{flexGrow: "1", overflow: "hidden"}}>
+                    { status }
+                </div>
+                <div style={{flexShrink: "0"}}>
+                    { status === Status.CHECKED_OUT && <Button label="Check In" onClick={ () => setStatus(Status.PRESENT) } /> }
+                    { status === Status.PRESENT && <Button label="Check Out" onClick={ () => setStatus(Status.CHECKED_OUT) } /> }
+                </div>
             </td>
         </>
     );

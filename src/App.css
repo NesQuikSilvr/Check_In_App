@@ -9,9 +9,16 @@
     background: #ffffff;
     padding: 25px;
     border-radius: 10px;
+    table-layout: fixed;
 }
 
 .roster-row {
     display: flex;
     justify-content: space-between;
+}
+
+th,
+td {
+  width: 250px;
+  overflow: hidden;
 }

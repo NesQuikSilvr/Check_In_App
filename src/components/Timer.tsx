@@ -24,6 +24,15 @@ function formatTime(date : Date) {
     return time;
 }
 
+class Timer {
+    start_time: number;
+
+
+    constructor(start_time: number) {
+        this.start_time = start_time;
+    }
+}
+
 function TimerComponent() {
 
     const [timerIsActive, setTimerActive] = useState(false);

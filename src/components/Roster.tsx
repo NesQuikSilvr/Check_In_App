@@ -1,29 +1,38 @@
-import { useEffect, useInsertionEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Classroom from './Classroom.tsx';
-import { Status, Student, StudentRosterRow } from './Student.tsx'
-import { TimerComponent } from './Timer.tsx';
-import Button from './Button.tsx';
+import { Student, StudentRosterRow } from './Student.tsx'
 
 interface RosterProp {
     classroom: Classroom;
     onSelectStudent: (item: Student) => void;
 }
 
+let guy = new Student("Peter", "Porker", "1284", "2388")
+
 function Roster({classroom, onSelectStudent}: RosterProp) {
-    const [selectedIndex, setSelectedIndex] = useState(-1);
+    const [selectedIndex, setSelectedIndex] = useState(-1)
 
     function checkRoster() {
         return classroom.students.length === 0 && (
             <>
                 <p>No students on roster</p>
             </>
-        );
+        )
+    }
+
+    function deleteStudent(user_id: string) {
+        classroom.students = classroom.students.filter((student) => student.user_id !== user_id)
+        
+        console.log(user_id)
+        console.log(classroom.students.toString())
     }
 
     return (
         <div className="roster">
             <h1>{classroom.name}</h1>
             {checkRoster()}
+
+            <input></input>
 
             <table className="table table-striped table-hover">
                 <thead>
@@ -35,6 +44,7 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
                     </tr>
                 </thead>
                 <tbody>
+                <tr><StudentRosterRow student={ guy } /></tr>
                     {
                         classroom.students.map((student, index) =>
                         <tr
@@ -45,7 +55,7 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
                                 onSelectStudent(student)
                             }}
                         >
-                            <StudentRosterRow student={ student }/>
+                            <StudentRosterRow student={student} />
                         </tr>
                         )
                     }
@@ -53,6 +63,10 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
             </table>
         </div>
     );
+}
+
+Roster.defaultProps = {
+    classroom: new Classroom("Base Classroom")
 }
 
 export default Roster;
