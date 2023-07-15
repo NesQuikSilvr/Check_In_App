@@ -1,58 +1,91 @@
-import { useState } from 'react'
-import Roster from './components/Roster';
-import Classroom from './components/Classroom';
-import { Status, Student } from './components/Student';
+import { useState, useEffect } from 'react'
+import Roster from './components/Roster'
+import Classroom from './components/Classroom'
+import { Status, Student } from './components/Student'
 
 function App() {
-  let students = [
-    new Student("Johnny", "Nguyen", "1234", "asdf"),
-    new Student("Peter", "Parker", "0022", "poop"),
-    new Student("Miles", "Morales", "1111", "butt"),
-    new Student("Gwen", "Stacy", "9999", "beep"),
-    new Student("Peni", "Parker", "4444", "weeb")
-  ];
 
-  let class1 = new Classroom("Gateway to Tech");
-  class1.setRoster(students);
-  class1.addStudent(new Student("Miguel", "O'Hara", "2099", "meep"));
-  class1.removeStudent(class1.students[0]);
+  /* "Database" */
+  const [studentList, setStudentList] = useState<Student[]>([
+    { first_name: "Johnny", last_name: "Nguyen", user_id: "1234", status: Status.PRESENT },
+    { first_name: "Peter", last_name: "Parker", user_id: "0022", status: Status.PRESENT },
+    { first_name: "Miles", last_name: "Morales", user_id: "1111", status: Status.PRESENT },
+    { first_name: "Gwen", last_name: "Stacy", user_id: "9999", status: Status.PRESENT },
+    { first_name: "Peni", last_name: "Parker", user_id: "4444", status: Status.CHECKED_OUT }
+  ])
 
-  students[3].status = Status.ABSENT;
+  const [classrooms, setClassrooms] = useState<Classroom[]>([
+    {
+      id: "1234",
+      name: "Gateway to Tech",
+      students: studentList
+    },
+    {
+      id: "4321",
+      name: "Math",
+      students: [studentList[4], studentList[2]]
+    }
+  ])
 
-  let class2 = new Classroom("Math");
+  const [displayedClass, setDisplayedClass] = useState<Classroom | null>(null)
 
-  let classrooms = [class1, class2];
+  /* Data Update Callbacks */
+  useEffect( () => {
+    console.log("Student list was updated")
+  }, [studentList])
 
-  const [displayedClass, setDisplayedClass] = useState<Classroom | null>(null);
+  function updateStudent(user_id: string) {
+     setStudentList( prevList =>
+      prevList.filter( student => (
+        student.user_id == user_id ? student.status = Status.ABSENT
+        : student)
+      )
+    )
+  }
+
+  function toggleStatus(user_id: string) {
+    let query = studentList.find(student => student.user_id === user_id)
+    if (query!.status === Status.PRESENT) {
+      query!.status = Status.CHECKED_OUT
+    }
+    else {
+      query!.status = Status.PRESENT
+    }
+
+    setStudentList( prevList => prevList.filter(student => student.user_id != "0000"))
+  }
+
+  /* Rendering */
 
   return (
     <div className="main">
 
-      {/* Classes dropdown list */}
-      <div className="btn-group">
-        <button type="button" className="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown">
-          Classrooms
-        </button>
-        <ul className="dropdown-menu">
-          {
-            classrooms.map( classroom =>
-              <li key={classroom.toString()}>
-                <a className="dropdown-item" href="#" onClick={() => setDisplayedClass(classroom)}>
-                  {classroom.name}
-                </a>
-              </li>
-            )
-          }
-          <li><hr className="dropdown-divider"/></li>
-          <li><a className="dropdown-item" href="#">Show all classrooms</a></li>
-        </ul>
-      </div>
+        {/* Classes dropdown list */}
+        <div className="btn-group">
+          <button type="button" className="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown">
+            Classrooms
+          </button>
+          <ul className="dropdown-menu">
+            {
+              classrooms.map( classroom =>
+                <li key={classroom.id}>
+                  <a className="dropdown-item" href="#" onClick={() => setDisplayedClass(classroom)}>
+                    {classroom.name}
+                  </a>
+                </li>
+              )
+            }
+            <li><hr className="dropdown-divider"/></li>
+            <li><a className="dropdown-item" href="#">Show all classrooms</a></li>
+          </ul>
+        </div>
 
-      {/* roster display */}
-      {displayedClass !== null && <Roster classroom={displayedClass} onSelectStudent={ () => {} }/>}
-      
+        {/* roster display */}
+        {<Roster classroom={classrooms[0]} onSelectStudent={ (student) => {toggleStatus(student.user_id)} }/>}
+        {<Roster classroom={classrooms[1]} onSelectStudent={ (student) => {toggleStatus(student.user_id)} }/>}
+
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

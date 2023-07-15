@@ -1,7 +1,5 @@
-import React from 'react'
 import { useState, useEffect } from 'react';
 import Button from './Button.tsx';
-import { TimerComponent } from './Timer.tsx';
 
 enum Status {
     PRESENT = "Present",
@@ -9,51 +7,32 @@ enum Status {
     CHECKED_OUT = "Checked out"
 }
 
-class Student {
-    first_name: string;
-    last_name: string;
-    user_id: string;
-    password: string;
-    status: Status;
-
-    constructor(first_name: string, last_name: string, user_id: string, password: string) {
-            this.first_name = first_name;
-            this.last_name = last_name;
-            this.user_id = user_id;
-            this.password = password;
-            this.status = Status.PRESENT;
-    }
-
-    public toString() {
-        return this.last_name + ", " + this.first_name + " | " + this.user_id + " | " + this.status;
-    }
-
-    public getStatus() {
-        return this.status;
-    }
-
-    public checkOut() {
-        console.log(this.first_name + " checked out")
-        this.status = Status.CHECKED_OUT;
-    }
-
-    public checkIn() {
-        console.log(this.first_name + " checked in")
-        this.status = Status.PRESENT;
-    }
+interface Student {
+    first_name: string
+    last_name: string
+    user_id: string
+    status: Status
 }
 
 interface RosterRowProp {
     student: Student
+    updateStudent: (student: Student) => void
 }
 
-const StudentRosterRow = ( { student }: RosterRowProp) => {
-    const [status, setStatus] = useState(student.getStatus());
+const StudentRosterRow = ( prop: RosterRowProp ) => {
+    const [student, setStudent] = useState<Student>(prop.student)
 
     useEffect( () => {
-        console.log("set student status")
-        student.status = status;
-    }, [status])
+        console.log("Student update effect")
+    }, [student])
+
+    function studentCheckOut() {
+        prop.updateStudent(student)
+    }
+
+    function studentCheckIn() {
+        prop.updateStudent(student)
+    }
 
     return (
         <>
@@ -61,16 +40,17 @@ const StudentRosterRow = ( { student }: RosterRowProp) => {
             <td>{student.first_name}</td>
             <td>{student.last_name}</td>
             <td className="roster-row" style={{fontStyle: "italic"}}>
-                <div style={{flexGrow: "1", overflow: "hidden"}}>
-                    { status }
+                <div>
+                    { student.status }
                 </div>
                 <div style={{flexShrink: "0"}}>
-                    { status === Status.CHECKED_OUT && <Button label="Check In" onClick={ () => setStatus(Status.PRESENT) } /> }
-                    { status === Status.PRESENT && <Button label="Check Out" onClick={ () => setStatus(Status.CHECKED_OUT) } /> }
+                    { student.status === Status.CHECKED_OUT && <Button label="Check In" onClick={ () => {studentCheckIn()} } /> }
+                    { student.status === Status.PRESENT && <Button label="Check Out" onClick={ () => {studentCheckOut()} } /> }
                 </div>
             </td>
         </>
     );
 }
 
-export { Status, Student, StudentRosterRow }
+export { Status, StudentRosterRow }
+export type { Student }

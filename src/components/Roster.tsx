@@ -1,16 +1,27 @@
-import { useEffect, useState } from 'react';
-import Classroom from './Classroom.tsx';
-import { Student, StudentRosterRow } from './Student.tsx'
+import { useState, useEffect } from 'react'
+import Classroom from './Classroom.tsx'
+import { Status, Student, StudentRosterRow } from './Student.tsx'
 
 interface RosterProp {
-    classroom: Classroom;
-    onSelectStudent: (item: Student) => void;
+    classroom: Classroom
+    onSelectStudent: (item: Student) => void
+    updateStudent?: (student: Student) => void
 }
-
-let guy = new Student("Peter", "Porker", "1284", "2388")
 
 function Roster({classroom, onSelectStudent}: RosterProp) {
     const [selectedIndex, setSelectedIndex] = useState(-1)
+    const [studentList, setStudentList] = useState<Student[]>(classroom.students)
+
+
+    useEffect( () => {
+        console.log("Roster effect update")
+    }, [studentList])
+
+    function updateStudent(student: Student) {
+        let newList = studentList.filter(e => e.user_id != student.user_id)
+        newList.push(student)
+        setStudentList(newList)
+    }
 
     function checkRoster() {
         return classroom.students.length === 0 && (
@@ -20,19 +31,12 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
         )
     }
 
-    function deleteStudent(user_id: string) {
-        classroom.students = classroom.students.filter((student) => student.user_id !== user_id)
-        
-        console.log(user_id)
-        console.log(classroom.students.toString())
-    }
-
     return (
         <div className="roster">
             <h1>{classroom.name}</h1>
             {checkRoster()}
 
-            <input></input>
+            <input onChange={() => {console.log("Typing")}}></input>
 
             <table className="table table-striped table-hover">
                 <thead>
@@ -44,18 +48,17 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
                     </tr>
                 </thead>
                 <tbody>
-                <tr><StudentRosterRow student={ guy } /></tr>
                     {
                         classroom.students.map((student, index) =>
                         <tr
-                            key={student.toString()}
+                            key={student.user_id}
                             className={selectedIndex === index ? "table-primary" : ""}
                             onClick={() => {
                                 setSelectedIndex(index)
                                 onSelectStudent(student)
                             }}
                         >
-                            <StudentRosterRow student={student} />
+                            <StudentRosterRow student={student} updateStudent={updateStudent} />
                         </tr>
                         )
                     }
@@ -65,8 +68,4 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
     );
 }
 
-Roster.defaultProps = {
-    classroom: new Classroom("Base Classroom")
-}
-
-export default Roster;
+export default Roster
