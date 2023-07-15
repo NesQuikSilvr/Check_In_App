@@ -30,29 +30,21 @@ function App() {
   const [displayedClass, setDisplayedClass] = useState<Classroom | null>(null)
 
   /* Data Update Callbacks */
-  useEffect( () => {
-    console.log("Student list was updated")
-  }, [studentList])
 
-  function updateStudent(user_id: string) {
-     setStudentList( prevList =>
-      prevList.filter( student => (
-        student.user_id == user_id ? student.status = Status.ABSENT
-        : student)
-      )
-    )
-  }
-
+  /* Check out a PRESENT student or check in a CHECKED_OUT student */
   function toggleStatus(user_id: string) {
-    let query = studentList.find(student => student.user_id === user_id)
-    if (query!.status === Status.PRESENT) {
-      query!.status = Status.CHECKED_OUT
-    }
-    else {
-      query!.status = Status.PRESENT
-    }
-
-    setStudentList( prevList => prevList.filter(student => student.user_id != "0000"))
+    let newList = studentList.map( student => {
+      if (student.user_id === user_id) {
+        if (student.status === Status.PRESENT) {
+          student.status = Status.CHECKED_OUT
+        }
+        else if (student.status === Status.CHECKED_OUT) {
+          student.status = Status.PRESENT
+        }
+      }
+      return student
+    })
+    setStudentList(newList)
   }
 
   /* Rendering */
@@ -81,8 +73,8 @@ function App() {
         </div>
 
         {/* roster display */}
-        {<Roster classroom={classrooms[0]} onSelectStudent={ (student) => {toggleStatus(student.user_id)} }/>}
-        {<Roster classroom={classrooms[1]} onSelectStudent={ (student) => {toggleStatus(student.user_id)} }/>}
+        {<Roster classroom={classrooms[0]} onSelectStudent={ () => {} } toggleStatus={toggleStatus}/>}
+        {<Roster classroom={classrooms[1]} onSelectStudent={ () => {} } toggleStatus={toggleStatus}/>}
 
     </div>
   )

@@ -5,17 +5,12 @@ import { Status, Student, StudentRosterRow } from './Student.tsx'
 interface RosterProp {
     classroom: Classroom
     onSelectStudent: (item: Student) => void
-    updateStudent?: (student: Student) => void
+    toggleStatus: (user_id: string) => void
 }
 
-function Roster({classroom, onSelectStudent}: RosterProp) {
+function Roster({classroom, onSelectStudent, toggleStatus}: RosterProp) {
     const [selectedIndex, setSelectedIndex] = useState(-1)
     const [studentList, setStudentList] = useState<Student[]>(classroom.students)
-
-
-    useEffect( () => {
-        console.log("Roster effect update")
-    }, [studentList])
 
     function updateStudent(student: Student) {
         let newList = studentList.filter(e => e.user_id != student.user_id)
@@ -58,7 +53,7 @@ function Roster({classroom, onSelectStudent}: RosterProp) {
                                 onSelectStudent(student)
                             }}
                         >
-                            <StudentRosterRow student={student} updateStudent={updateStudent} />
+                            <StudentRosterRow student={student} updateStudent={updateStudent} toggleStatus={toggleStatus}/>
                         </tr>
                         )
                     }

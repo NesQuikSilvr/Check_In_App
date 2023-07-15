@@ -17,22 +17,11 @@ interface Student {
 interface RosterRowProp {
     student: Student
     updateStudent: (student: Student) => void
+    toggleStatus: (user_id: string) => void
 }
 
 const StudentRosterRow = ( prop: RosterRowProp ) => {
     const [student, setStudent] = useState<Student>(prop.student)
-
-    useEffect( () => {
-        console.log("Student update effect")
-    }, [student])
-
-    function studentCheckOut() {
-        prop.updateStudent(student)
-    }
-
-    function studentCheckIn() {
-        prop.updateStudent(student)
-    }
 
     return (
         <>
@@ -44,8 +33,8 @@ const StudentRosterRow = ( prop: RosterRowProp ) => {
                     { student.status }
                 </div>
                 <div style={{flexShrink: "0"}}>
-                    { student.status === Status.CHECKED_OUT && <Button label="Check In" onClick={ () => {studentCheckIn()} } /> }
-                    { student.status === Status.PRESENT && <Button label="Check Out" onClick={ () => {studentCheckOut()} } /> }
+                    { student.status === Status.CHECKED_OUT && <Button label="Check In" onClick={ () => {prop.toggleStatus(student.user_id)} } /> }
+                    { student.status === Status.PRESENT && <Button label="Check Out" onClick={ () => {prop.toggleStatus(student.user_id)} } /> }
                 </div>
             </td>
         </>
