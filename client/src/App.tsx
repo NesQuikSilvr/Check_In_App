@@ -3,25 +3,29 @@ import Roster from './components/Roster'
 import Classroom from './components/Classroom'
 import { Status, Student } from './components/Student'
 
+interface backendData {
+  content: string
+}
+
 function App() {
 
-  const [backendData, setBackendData] = useState([{}])
+  const [backendData, setBackendData] = useState<backendData[]>([])
 
   useEffect( () => {
-    fetch("/api").then(
-      //response => response.json()
-      response => response.text()
-    ).then(
+    fetch("http://localhost:5000/api")
+    .then(
+      response => response.json()
+    )
+    .then(
       data => {
-        //setBackendData(data)
-        console.log(data)
+        setBackendData(data)
       }
     )
-    console.log(backendData)
   }, [])
 
   useEffect(() => {
     console.log(backendData);
+    console.log(typeof backendData)
   }, [backendData]);
 
   /* "Database" */
@@ -71,6 +75,23 @@ function App() {
 
   return (
     <div className="main">
+        {/* API Request Testing */}
+
+        {(typeof backendData === undefined) ? (
+          <p>Loading...</p>
+        ) : (
+          <ul>
+            {
+              backendData.map( item =>
+                <li key={item.content}>
+                  {item.content}
+                </li>
+              )
+            }
+        </ul>
+        )}
+
+        
 
         {/* Classes dropdown list */}
         <div className="btn-group">
