@@ -5,16 +5,36 @@ import { Status, Student } from './components/Student'
 
 function App() {
 
+  const [backendData, setBackendData] = useState([{}])
+
+  useEffect( () => {
+    fetch("/api").then(
+      //response => response.json()
+      response => response.text()
+    ).then(
+      data => {
+        //setBackendData(data)
+        console.log(data)
+      }
+    )
+    console.log(backendData)
+  }, [])
+
+  useEffect(() => {
+    console.log(backendData);
+  }, [backendData]);
+
   /* "Database" */
   const [studentList, setStudentList] = useState<Student[]>([
     { first_name: "Johnny", last_name: "Nguyen", user_id: "1234", status: Status.PRESENT },
     { first_name: "Peter", last_name: "Parker", user_id: "0022", status: Status.PRESENT },
     { first_name: "Miles", last_name: "Morales", user_id: "1111", status: Status.PRESENT },
     { first_name: "Gwen", last_name: "Stacy", user_id: "9999", status: Status.PRESENT },
-    { first_name: "Peni", last_name: "Parker", user_id: "4444", status: Status.CHECKED_OUT }
+    { first_name: "Peni", last_name: "Parker", user_id: "4444", status: Status.CHECKED_OUT },
+    { first_name: "Miguel", last_name: "O'Hara", user_id: "2099", status: Status.ABSENT }
   ])
 
-  const [classrooms, setClassrooms] = useState<Classroom[]>([
+  const [classrooms] = useState<Classroom[]>([
     {
       id: "1234",
       name: "Gateway to Tech",
@@ -73,8 +93,7 @@ function App() {
         </div>
 
         {/* roster display */}
-        {<Roster classroom={classrooms[0]} onSelectStudent={ () => {} } toggleStatus={toggleStatus}/>}
-        {<Roster classroom={classrooms[1]} onSelectStudent={ () => {} } toggleStatus={toggleStatus}/>}
+        {displayedClass != null && <Roster classroom={displayedClass} toggleStatus={toggleStatus}/>}
 
     </div>
   )

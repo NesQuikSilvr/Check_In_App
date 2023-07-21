@@ -1,7 +1,7 @@
 import { useState,useEffect } from "react";
 import { LuAlarmClock } from "react-icons/lu"
 
-const expiration = 3600000;
+const expiration = 6000;
 
 function formatTime(date : Date) {
     let time = "";
@@ -25,25 +25,46 @@ function formatTime(date : Date) {
 }
 
 class Timer {
-    start_time: number;
+    expiration = 6000
+    start_time = 0
+    current_time = 0
+    timer_is_active = false
+    interval_id = 0
 
+    start() {
+        this.timer_is_active = true
+        this.start_time = Date.now()
+        console.log("Set time start: " + new Date(this.start_time).toLocaleTimeString());
 
-    constructor(start_time: number) {
-        this.start_time = start_time;
+        this.interval_id = setInterval( () => {
+            this.update()
+        }, 200)
+    }
+
+    update() {
+        this.current_time = Date.now() - this.start_time
+
+        if (this.current_time > expiration) {
+            this.clear()
+        }
+    }
+
+    clear() {
+        clearInterval(this.interval_id)
+        this.interval_id = 0
     }
 }
 
 function TimerComponent() {
-
     const [timerIsActive, setTimerActive] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
-    const [timer, setTimer] = useState<ReturnType<typeof setInterval> | 0>(0);
+    const [timer, setTimer] = useState(0);
 
     const startTimer = () => {
         setTimerActive(true);
         
         let timeStart = Date.now();
-        console.log("Set time start: " + new Date(timeStart).toLocaleTimeString());
+        console.log("Set time start: " + new Date().toLocaleTimeString());
         
         setCurrentTime( Date.now() - timeStart );
         let interval = setInterval( () => {
@@ -69,7 +90,7 @@ function TimerComponent() {
 
     useEffect(() => {
         if (currentTime > expiration) {
-            console.log("Timer expired at: " + Date.now().toLocaleString());
+            console.log("Timer expired at: " + new Date().toLocaleTimeString());
             resetTimer();
         }
     }, [currentTime]);
@@ -91,4 +112,5 @@ function TimerComponent() {
     )
 }
 
-export { TimerComponent };
+export type { Timer }
+export { TimerComponent }

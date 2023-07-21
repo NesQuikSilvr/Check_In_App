@@ -1,23 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import Classroom from './Classroom.tsx'
-import { Status, Student, StudentRosterRow } from './Student.tsx'
+import { Status, StudentRosterRow } from './Student.tsx'
 
 interface RosterProp {
     classroom: Classroom
-    onSelectStudent: (item: Student) => void
     toggleStatus: (user_id: string) => void
 }
 
-function Roster({classroom, onSelectStudent, toggleStatus}: RosterProp) {
-    const [selectedIndex, setSelectedIndex] = useState(-1)
-    const [studentList, setStudentList] = useState<Student[]>(classroom.students)
-
-    function updateStudent(student: Student) {
-        let newList = studentList.filter(e => e.user_id != student.user_id)
-        newList.push(student)
-        setStudentList(newList)
-    }
-
+function Roster({classroom, toggleStatus}: RosterProp) {
+    
     function checkRoster() {
         return classroom.students.length === 0 && (
             <>
@@ -31,8 +22,6 @@ function Roster({classroom, onSelectStudent, toggleStatus}: RosterProp) {
             <h1>{classroom.name}</h1>
             {checkRoster()}
 
-            <input onChange={() => {console.log("Typing")}}></input>
-
             <table className="table table-striped table-hover">
                 <thead>
                     <tr className="table-dark">
@@ -44,16 +33,12 @@ function Roster({classroom, onSelectStudent, toggleStatus}: RosterProp) {
                 </thead>
                 <tbody>
                     {
-                        classroom.students.map((student, index) =>
+                        classroom.students.map((student) =>
                         <tr
                             key={student.user_id}
-                            className={selectedIndex === index ? "table-primary" : ""}
-                            onClick={() => {
-                                setSelectedIndex(index)
-                                onSelectStudent(student)
-                            }}
+                            className={student.status === Status.CHECKED_OUT ? "table-warning" : ""}
                         >
-                            <StudentRosterRow student={student} updateStudent={updateStudent} toggleStatus={toggleStatus}/>
+                            <StudentRosterRow student={student} toggleStatus={toggleStatus}/>
                         </tr>
                         )
                     }
