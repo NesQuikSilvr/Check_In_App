@@ -10,9 +10,9 @@ enum Status {
 }
 
 interface Student {
+    user_id: string
     first_name: string
     last_name: string
-    user_id: string
     status: Status
 }
 

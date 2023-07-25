@@ -3,39 +3,30 @@ import Roster from './components/Roster'
 import Classroom from './components/Classroom'
 import { Status, Student } from './components/Student'
 
-interface backendData {
-  content: string
-}
-
 function App() {
 
-  const [backendData, setBackendData] = useState<backendData[]>([])
+  const [dbData, setdbData] = useState<Student[]>([])
 
   useEffect( () => {
-    fetch("http://localhost:5000/api")
-    .then(
-      response => response.json()
-    )
-    .then(
-      data => {
-        setBackendData(data)
-      }
-    )
+    fetch("http://localhost:5000/students")
+    .then( response => response.json() )
+    .then( data => { setdbData(data) } )
   }, [])
 
-  useEffect(() => {
-    console.log(backendData);
-    console.log(typeof backendData)
-  }, [backendData]);
+  useEffect( () => {
+    if (dbData.length > 0) {
+      console.log(dbData);
+    }
+  }, [dbData])
 
   /* "Database" */
   const [studentList, setStudentList] = useState<Student[]>([
-    { first_name: "Johnny", last_name: "Nguyen", user_id: "1234", status: Status.PRESENT },
-    { first_name: "Peter", last_name: "Parker", user_id: "0022", status: Status.PRESENT },
-    { first_name: "Miles", last_name: "Morales", user_id: "1111", status: Status.PRESENT },
-    { first_name: "Gwen", last_name: "Stacy", user_id: "9999", status: Status.PRESENT },
-    { first_name: "Peni", last_name: "Parker", user_id: "4444", status: Status.CHECKED_OUT },
-    { first_name: "Miguel", last_name: "O'Hara", user_id: "2099", status: Status.ABSENT }
+    { user_id: "1234", first_name: "Johnny", last_name: "Nguyen", status: Status.PRESENT },
+    { user_id: "0022", first_name: "Peter", last_name: "Parker", status: Status.PRESENT },
+    { user_id: "1111", first_name: "Miles", last_name: "Morales", status: Status.PRESENT },
+    { user_id: "9999", first_name: "Gwen", last_name: "Stacy", status: Status.PRESENT },
+    { user_id: "4444", first_name: "Peni", last_name: "Parker", status: Status.CHECKED_OUT },
+    { user_id: "2099", first_name: "Miguel", last_name: "O'Hara", status: Status.ABSENT }
   ])
 
   const [classrooms] = useState<Classroom[]>([
@@ -71,50 +62,34 @@ function App() {
     setStudentList(newList)
   }
 
-  /* Rendering */
-
   return (
     <div className="main">
-        {/* API Request Testing */}
+      {/* API Request Testing */}
 
-        {(typeof backendData === undefined) ? (
-          <p>Loading...</p>
-        ) : (
-          <ul>
-            {
-              backendData.map( item =>
-                <li key={item.content}>
-                  {item.content}
-                </li>
-              )
-            }
+      
+
+      {/* Classes dropdown list */}
+      <div className="btn-group">
+        <button type="button" className="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown">
+          Classrooms
+        </button>
+        <ul className="dropdown-menu">
+          {
+            classrooms.map( classroom =>
+              <li key={classroom.id}>
+                <a className="dropdown-item" href="#" onClick={() => setDisplayedClass(classroom)}>
+                  {classroom.name}
+                </a>
+              </li>
+            )
+          }
+          <li><hr className="dropdown-divider"/></li>
+          <li><a className="dropdown-item" href="#">Show all classrooms</a></li>
         </ul>
-        )}
+      </div>
 
-        
-
-        {/* Classes dropdown list */}
-        <div className="btn-group">
-          <button type="button" className="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown">
-            Classrooms
-          </button>
-          <ul className="dropdown-menu">
-            {
-              classrooms.map( classroom =>
-                <li key={classroom.id}>
-                  <a className="dropdown-item" href="#" onClick={() => setDisplayedClass(classroom)}>
-                    {classroom.name}
-                  </a>
-                </li>
-              )
-            }
-            <li><hr className="dropdown-divider"/></li>
-            <li><a className="dropdown-item" href="#">Show all classrooms</a></li>
-          </ul>
-        </div>
-
-        {/* roster display */}
-        {displayedClass != null && <Roster classroom={displayedClass} toggleStatus={toggleStatus}/>}
+      {/* roster display */}
+      {displayedClass != null && <Roster classroom={displayedClass} toggleStatus={toggleStatus}/>}
 
     </div>
   )
