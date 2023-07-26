@@ -12,7 +12,7 @@ CREATE TABLE students(
 
 CREATE TABLE classrooms(
     `id` INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    `name` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE classroom_student_mapping(
@@ -24,7 +24,7 @@ CREATE TABLE classroom_student_mapping(
 );
 
 
-INSERT INTO students (student_id, first_name, last_name, student_status)
+INSERT INTO students (`id`, first_name, last_name, `status`)
 VALUES
     (  "1234", "Johnny",  "Nguyen", "PRESENT" ),
     (  "0022", "Peter",  "Parker", "PRESENT" ),
@@ -40,22 +40,9 @@ VALUES
     ("Advisory");
 
 INSERT INTO classroom_student_mapping (class_id, student_id)
-    VALUES ( (SELECT class_id FROM classrooms WHERE class_id = 1),
-             (SELECT student_id FROM students WHERE student_id = "2099") );
+    VALUES ( (SELECT `id` FROM classrooms WHERE `id` = 2),
+             (SELECT `id` FROM students WHERE `id` = "2099") );
 
-SELECT * FROM students;
+DELETE FROM classroom_student_mapping WHERE mapping_id = 5;
 
-ALTER TABLE classrooms
-RENAME COLUMN class_name TO name;
-
-SELECT classrooms.class_id, classrooms.class_name
-FROM classrooms
-WHERE classrooms.class_id = 1;
-
-SELECT * FROM classrooms;
-
-SELECT students.student_id, students.first_name, students.last_name, students.student_status
-FROM students
-JOIN classroom_student_mapping ON students.student_id = classroom_student_mapping.student_id;
-
-DELETE FROM classrooms WHERE class_id = 6;
+SELECT * FROM classroom_student_mapping;

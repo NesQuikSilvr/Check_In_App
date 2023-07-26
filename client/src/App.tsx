@@ -6,12 +6,13 @@ import { Status, Student } from './components/Student'
 function App() {
 
   const [classrooms, setClassrooms] = useState<Classroom[]>([])
-  const [dbData, setdbData] = useState<Student[]>([])
+  const [studentList, setStudentList] = useState<Student[]>([])
+  const [roster, setRoster] = useState<Student[]>([])
 
   useEffect( () => {
     fetch("http://localhost:5000/students")
     .then( response => response.json() )
-    .then( data => { setdbData(data) } )
+    .then( data => { setStudentList(data) } )
   }, [])
 
   useEffect( () => {
@@ -20,34 +21,22 @@ function App() {
     .then( data => { setClassrooms(data) } )
   }, [])
 
-  useEffect( () => {
-    if (classrooms.length > 0) {
-      console.log(classrooms);
-    }
-  }, [classrooms])
-
-  useEffect( () => {
-    if (dbData.length > 0) {
-      console.log(dbData);
-    }
-  }, [dbData])
-
-  /* "Database" */
-  const [studentList, setStudentList] = useState<Student[]>([
-    { id: "1234", first_name: "Johnny", last_name: "Nguyen", status: Status.PRESENT },
-    { id: "0022", first_name: "Peter", last_name: "Parker", status: Status.PRESENT },
-    { id: "1111", first_name: "Miles", last_name: "Morales", status: Status.PRESENT },
-    { id: "9999", first_name: "Gwen", last_name: "Stacy", status: Status.PRESENT },
-    { id: "4444", first_name: "Peni", last_name: "Parker", status: Status.CHECKED_OUT },
-    { id: "2099", first_name: "Miguel", last_name: "O'Hara", status: Status.ABSENT }
-  ])
-
   const [displayedClass, setDisplayedClass] = useState<Classroom | null>(null)
+
+  useEffect( () => {
+    if (displayedClass !== null) {
+      getRoster(displayedClass.id)
+      .then( (data) => setRoster(data))
+      .catch( (error) => {
+        console.error("Error fetching roster data:", error)
+      })
+    }
+  }, [displayedClass])
 
   /* Data Update Callbacks */
 
   /* Check out a PRESENT student or check in a CHECKED_OUT student */
-  function toggleStatus(id: string) {
+  /* function toggleStatus(id: string) {
     let newList = studentList.map( student => {
       if (student.id === id) {
         if (student.status === Status.PRESENT) {
@@ -60,17 +49,12 @@ function App() {
       return student
     })
     setStudentList(newList)
-  }
+  } */
 
   return (
     <div className="main">
-      {/* API Request Testing */}
-
-      
 
       {/* Classes dropdown list */}
-      {
-        classrooms.length > 0 &&
         <div className="btn-group">
         <button type="button" className="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown">
           Classrooms
@@ -89,14 +73,39 @@ function App() {
           <li><a className="dropdown-item" href="#">Show all classrooms</a></li>
         </ul>
       </div>
-      }
       
 
       {/* roster display */}
-      {displayedClass != null && <Roster classroom={displayedClass} toggleStatus={toggleStatus}/>}
+      { displayedClass != null &&
+        <>
+          <p>{displayedClass.name}</p>
+          <ul>
+            {
+              roster.map( student =>
+                <li key={student.id}>
+                  {student.id}, {student.first_name}, {student.last_name}
+                </li>
+              )
+            }
+          </ul>
+        </>
+      }
+      {/* displayedClass != null && <Roster classroom={displayedClass} toggleStatus={toggleStatus}/> */}
 
     </div>
   )
+}
+
+async function getRoster(class_id: number): Promise<Student[]> {
+  try {
+    const response = await fetch("http://localhost:5000/classrooms/" + class_id)
+    const students: Student[] = await response.json()
+    console.log(students)
+    return students
+  } catch (error) {
+    console.error("Error fetching classroom roster:", error)
+    return []
+  }
 }
 
 export default App

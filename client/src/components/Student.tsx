@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import Classroom from './Classroom.tsx';
 import Button from './Button.tsx';
-import { TimerComponent, Timer } from './Timer.tsx';
+import { TimerComponent } from './Timer.tsx';
 
 enum Status {
     PRESENT = "Present",
