@@ -4,15 +4,15 @@ CREATE DATABASE school;
 USE school;
 
 CREATE TABLE students(
-    student_id VARCHAR(8) PRIMARY KEY,
+    `id` VARCHAR(8) PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
-    student_status ENUM ('PRESENT', 'CHECKED_OUT', 'ABSENT')
+    `status` ENUM ('PRESENT', 'CHECKED_OUT', 'ABSENT')
 );
 
 CREATE TABLE classrooms(
-    class_id INT AUTO_INCREMENT PRIMARY KEY,
-    class_name VARCHAR(255) NOT NULL
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE classroom_student_mapping(
@@ -41,12 +41,21 @@ VALUES
 
 INSERT INTO classroom_student_mapping (class_id, student_id)
     VALUES ( (SELECT class_id FROM classrooms WHERE class_id = 1),
-             (SELECT student_id FROM students WHERE student_id = "1234") );
+             (SELECT student_id FROM students WHERE student_id = "2099") );
 
 SELECT * FROM students;
 
+ALTER TABLE classrooms
+RENAME COLUMN class_name TO name;
+
+SELECT classrooms.class_id, classrooms.class_name
+FROM classrooms
+WHERE classrooms.class_id = 1;
+
 SELECT * FROM classrooms;
 
-SELECT * FROM classroom_student_mapping;
+SELECT students.student_id, students.first_name, students.last_name, students.student_status
+FROM students
+JOIN classroom_student_mapping ON students.student_id = classroom_student_mapping.student_id;
 
-DELETE FROM classroom_student_mapping WHERE mapping_id = 3;
+DELETE FROM classrooms WHERE class_id = 6;

@@ -10,7 +10,7 @@ enum Status {
 }
 
 interface Student {
-    user_id: string
+    id: string
     first_name: string
     last_name: string
     status: Status
@@ -26,7 +26,7 @@ const StudentRosterRow = ( prop: RosterRowProp ) => {
 
     return (
         <>
-            <td>{student.user_id}</td>
+            <td>{student.id}</td>
             <td>{student.first_name}</td>
             <td>{student.last_name}</td>
             <td className="roster-row" style={{fontStyle: "italic"}}>
@@ -35,7 +35,7 @@ const StudentRosterRow = ( prop: RosterRowProp ) => {
                 </div>
                 <div style={{flexShrink: "0"}}>
                     { student.status === Status.CHECKED_OUT && <TimerComponent/> }
-                    { student.status === Status.PRESENT && <Button label="Check Out" onClick={ () => {prop.toggleStatus(student.user_id)} } /> }
+                    { student.status === Status.PRESENT && <Button label="Check Out" onClick={ () => {prop.toggleStatus(student.id)} } /> }
                 </div>
             </td>
         </>

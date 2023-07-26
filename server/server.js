@@ -22,12 +22,24 @@ database.connect( (error) => {
     console.log("Connection complete")
 })
 
-app.get("/students", (request, response) => {
-    const sql = "SELECT * FROM students"
+app.get("/classrooms", (request, response) => {
+    const sql = `SELECT classrooms.id, classrooms.name
+                 FROM classrooms
+                 WHERE classrooms.id = 1`
     database.query(sql, (error, data) => {
         if (error) return response.json(error)
 
-        console.log(data)
+        return response.json(data)
+    })
+})
+
+app.get("/students", (request, response) => {
+    const sql = `SELECT students.id, students.first_name, students.last_name, students.status
+                 FROM students
+                 JOIN classroom_student_mapping ON students.id = classroom_student_mapping.student_id;`
+    database.query(sql, (error, data) => {
+        if (error) return response.json(error)
+
         return response.json(data)
     })
 })
