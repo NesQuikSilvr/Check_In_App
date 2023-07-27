@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Classroom from './Classroom.tsx'
-import { Status, StudentRosterRow } from './Student.tsx'
+import { Student, Status, StudentRosterRow } from './Student.tsx'
 
 interface RosterProp {
     classroom: Classroom
@@ -8,9 +8,17 @@ interface RosterProp {
 }
 
 function Roster({classroom, toggleStatus}: RosterProp) {
+    const [studentList, setStudentList] = useState<Student[]>([])
+
+    useEffect( () => {
+        getRoster(classroom.id)
+        .then(data => {
+            setStudentList(data)
+        })
+    }, [classroom])
     
     function checkRoster() {
-        return classroom.students.length === 0 && (
+        return studentList.length === 0 && (
             <>
                 <p>No students on roster</p>
             </>
@@ -33,12 +41,12 @@ function Roster({classroom, toggleStatus}: RosterProp) {
                 </thead>
                 <tbody>
                     {
-                        classroom.students.map((student) =>
+                        studentList.map((student) =>
                         <tr
-                            key={student.user_id}
+                            key={student.id}
                             className={student.status === Status.CHECKED_OUT ? "table-warning" : ""}
                         >
-                            <StudentRosterRow student={student} toggleStatus={toggleStatus}/>
+                            {<StudentRosterRow student={student} toggleStatus={toggleStatus}/>}
                         </tr>
                         )
                     }
@@ -47,5 +55,17 @@ function Roster({classroom, toggleStatus}: RosterProp) {
         </div>
     );
 }
+
+async function getRoster(class_id: number): Promise<Student[]> {
+    try {
+      const response = await fetch("http://localhost:5000/classrooms/" + class_id)
+      const students: Student[] = await response.json()
+
+      return students
+    } catch (error) {
+      console.error("Error fetching classroom roster:", error)
+      return []
+    }
+  }
 
 export default Roster

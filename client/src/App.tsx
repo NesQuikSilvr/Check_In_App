@@ -8,12 +8,13 @@ function App() {
   const [classrooms, setClassrooms] = useState<Classroom[]>([])
   const [studentList, setStudentList] = useState<Student[]>([])
   const [roster, setRoster] = useState<Student[]>([])
-
+  /* 
   useEffect( () => {
     fetch("http://localhost:5000/students")
     .then( response => response.json() )
     .then( data => { setStudentList(data) } )
   }, [])
+  */
 
   useEffect( () => {
     fetch("http://localhost:5000/classrooms")
@@ -36,7 +37,7 @@ function App() {
   /* Data Update Callbacks */
 
   /* Check out a PRESENT student or check in a CHECKED_OUT student */
-  /* function toggleStatus(id: string) {
+  function toggleStatus(id: string) {
     let newList = studentList.map( student => {
       if (student.id === id) {
         if (student.status === Status.PRESENT) {
@@ -49,7 +50,7 @@ function App() {
       return student
     })
     setStudentList(newList)
-  } */
+  }
 
   return (
     <div className="main">
@@ -76,21 +77,7 @@ function App() {
       
 
       {/* roster display */}
-      { displayedClass != null &&
-        <>
-          <p>{displayedClass.name}</p>
-          <ul>
-            {
-              roster.map( student =>
-                <li key={student.id}>
-                  {student.id}, {student.first_name}, {student.last_name}
-                </li>
-              )
-            }
-          </ul>
-        </>
-      }
-      {/* displayedClass != null && <Roster classroom={displayedClass} toggleStatus={toggleStatus}/> */}
+      {displayedClass != null && <Roster classroom={displayedClass} toggleStatus={toggleStatus}/>}
 
     </div>
   )
@@ -100,7 +87,7 @@ async function getRoster(class_id: number): Promise<Student[]> {
   try {
     const response = await fetch("http://localhost:5000/classrooms/" + class_id)
     const students: Student[] = await response.json()
-    console.log(students)
+
     return students
   } catch (error) {
     console.error("Error fetching classroom roster:", error)
