@@ -7,47 +7,12 @@ function App() {
 
   const [classrooms, setClassrooms] = useState<Classroom[]>([])
   const [studentList, setStudentList] = useState<Student[]>([])
-  const [roster, setRoster] = useState<Student[]>([])
 
   useEffect( () => {
-    getStudent("0022")
+    getClassrooms()
   }, [])
 
-  /* useEffect( () => {
-    fetch("http://localhost:5000/classrooms")
-    .then( response => response.json() )
-    .then( data => { setClassrooms(data) } )
-  }, []) */
-
   const [displayedClass, setDisplayedClass] = useState<Classroom | null>(null)
-
-  /* useEffect( () => {
-    if (displayedClass !== null) {
-      getRoster(displayedClass.id)
-      .then( (data) => setRoster(data))
-      .catch( (error) => {
-        console.error("Error fetching roster data:", error)
-      })
-    }
-  }, [displayedClass]) */
-
-  /* Data Update Callbacks */
-
-  /* Check out a PRESENT student or check in a CHECKED_OUT student */
-  function toggleStatus(id: string) {
-    let newList = studentList.map( student => {
-      if (student.id === id) {
-        if (student.status === Status.PRESENT) {
-          student.status = Status.CHECKED_OUT
-        }
-        else if (student.status === Status.CHECKED_OUT) {
-          student.status = Status.PRESENT
-        }
-      }
-      return student
-    })
-    setStudentList(newList)
-  }
 
   return (
     <div className="main">
@@ -79,16 +44,27 @@ function App() {
     </div>
   )
 
-  async function getRoster(class_id: number): Promise<Student[]> {
-    try {
-      const response = await fetch("http://localhost:5000/classrooms/" + class_id)
-      const students: Student[] = await response.json()
-  
-      return students
-    } catch (error) {
-      console.error("Error fetching classroom roster:", error)
-      return []
-    }
+  /* Callbacks */
+  function toggleStatus(id: string) {
+    let newList = studentList.map( student => {
+      if (student.id === id) {
+        if (student.status === Status.PRESENT) {
+          student.status = Status.CHECKED_OUT
+        }
+        else if (student.status === Status.CHECKED_OUT) {
+          student.status = Status.PRESENT
+        }
+      }
+      return student
+    })
+    setStudentList(newList)
+  }
+
+  /* API Requests */
+  async function getClassrooms() {
+    fetch("http://localhost:5000/classrooms")
+    .then( response => response.json() )
+    .then( data => { setClassrooms(data) } )
   }
   
   async function addStudent() {

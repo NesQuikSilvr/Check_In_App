@@ -1,5 +1,6 @@
 const connection = require("../services/db")
 
+/* All students in database */
 exports.getAllStudents = (request, response) => {
     const sql = `SELECT * FROM students`
     connection.query(sql, async (error, data) => {
@@ -9,6 +10,7 @@ exports.getAllStudents = (request, response) => {
     })
 }
 
+/* Search student by id */
 exports.getStudent = (request, response) => {
     const sql = `SELECT * FROM students
                  WHERE id = ?`
@@ -19,40 +21,8 @@ exports.getStudent = (request, response) => {
     })
 }
 
-/* router.get("/", async (request, response) => {
-    const sql = `SELECT * FROM students`
-    console.log("All")
-    connection.query(sql, (error, data) => {
-        if (error) return response.json(error)
-
-        return response.json(data)
-    })
-    response.send("Get request to students")
-})
-
-router.get("/students/:id", async (request, response) => {
-    const sql = `SELECT * FROM students`
-    console.log("By id")
-    console.log(request.params.id)
-    connection.query(sql, (error, data) => {
-        if (error) return response.json(error)
-
-        return response.json(data)
-    })
-})
-
-router.get("/students/:first_name", async (request, response) => {
-    const sql = `SELECT * FROM students`
-    console.log("By name")
-    console.log(request.params.first_name)
-    connection.query(sql, (error, data) => {
-        if (error) return response.json(error)
-
-        return response.json(data)
-    })
-})
-
-router.post("/students", async (request, response) => {
+/* Add a new student */
+exports.addStudent = (request, response) => {
     const sql = `INSERT INTO students (id, first_name, last_name, status)
                  VALUE (?, ?, ?, ?)`
     
@@ -66,13 +36,13 @@ router.post("/students", async (request, response) => {
     })
 
     return
+}
 
-})
-
-router.post("/students", async (request, response) => {
+/* Update existing student */
+exports.updateStudent = (request, response) => {
     const sql = `UPDATE students
                  SET status = ?
                  WHERE id = ?`
 
     connection.query(sql, [request.body.status, request.body.id])
-}) */
+}

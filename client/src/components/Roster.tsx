@@ -9,17 +9,10 @@ interface RosterProp {
 
 function Roster({classroom, toggleStatus}: RosterProp) {
     const [studentList, setStudentList] = useState<Student[]>([])
-    
-    useEffect( () => {
-        getRoster(classroom.id)
-        .then(data => {
-            setStudentList(data)
-        })
-    }, [classroom])
 
     useEffect( () => {
-        console.info(studentList)
-      }, [studentList])
+        getRoster(classroom.id)
+    }, [classroom])
     
     function checkRoster() {
         return studentList.length === 0 && (
@@ -57,19 +50,14 @@ function Roster({classroom, toggleStatus}: RosterProp) {
                 </tbody>
             </table>
         </div>
-    );
-}
+    )
 
-async function getRoster(class_id: number): Promise<Student[]> {
-    try {
-      const response = await fetch("http://localhost:5000/classrooms/" + class_id)
-      const students: Student[] = await response.json()
-
-      return students
-    } catch (error) {
-      console.error("Error fetching classroom roster:", error)
-      return []
+    /* API Requests */
+    async function getRoster(id: number) {
+        fetch(`http://localhost:5000/classrooms/${id}`)
+        .then( response => response.json() )
+        .then( data => setStudentList(data) )
     }
-  }
+}
 
 export default Roster
