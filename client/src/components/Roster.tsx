@@ -9,13 +9,17 @@ interface RosterProp {
 
 function Roster({classroom, toggleStatus}: RosterProp) {
     const [studentList, setStudentList] = useState<Student[]>([])
-
+    
     useEffect( () => {
         getRoster(classroom.id)
         .then(data => {
             setStudentList(data)
         })
     }, [classroom])
+
+    useEffect( () => {
+        console.info(studentList)
+      }, [studentList])
     
     function checkRoster() {
         return studentList.length === 0 && (

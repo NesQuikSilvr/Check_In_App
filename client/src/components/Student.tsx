@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from './Button.tsx';
 import { TimerComponent } from './Timer.tsx';
 
 enum Status {
-    PRESENT = "Present",
-    ABSENT = "Absent",
-    CHECKED_OUT = "Checked out"
+    PRESENT = "PRESENT",
+    ABSENT = "ABSENT",
+    CHECKED_OUT = "CHECKED_OUT"
 }
 
 interface Student {
@@ -21,7 +21,7 @@ interface RosterRowProp {
 }
 
 const StudentRosterRow = ( prop: RosterRowProp ) => {
-    const [student] = useState<Student>(prop.student)
+    const [student, setStudent] = useState<Student>(prop.student)
 
     return (
         <>

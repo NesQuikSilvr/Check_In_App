@@ -8,23 +8,20 @@ function App() {
   const [classrooms, setClassrooms] = useState<Classroom[]>([])
   const [studentList, setStudentList] = useState<Student[]>([])
   const [roster, setRoster] = useState<Student[]>([])
-  /* 
-  useEffect( () => {
-    fetch("http://localhost:5000/students")
-    .then( response => response.json() )
-    .then( data => { setStudentList(data) } )
-  }, [])
-  */
 
   useEffect( () => {
+    getStudent("0022")
+  }, [])
+
+  /* useEffect( () => {
     fetch("http://localhost:5000/classrooms")
     .then( response => response.json() )
     .then( data => { setClassrooms(data) } )
-  }, [])
+  }, []) */
 
   const [displayedClass, setDisplayedClass] = useState<Classroom | null>(null)
 
-  useEffect( () => {
+  /* useEffect( () => {
     if (displayedClass !== null) {
       getRoster(displayedClass.id)
       .then( (data) => setRoster(data))
@@ -32,7 +29,7 @@ function App() {
         console.error("Error fetching roster data:", error)
       })
     }
-  }, [displayedClass])
+  }, [displayedClass]) */
 
   /* Data Update Callbacks */
 
@@ -81,17 +78,72 @@ function App() {
 
     </div>
   )
-}
 
-async function getRoster(class_id: number): Promise<Student[]> {
-  try {
-    const response = await fetch("http://localhost:5000/classrooms/" + class_id)
-    const students: Student[] = await response.json()
-
-    return students
-  } catch (error) {
-    console.error("Error fetching classroom roster:", error)
-    return []
+  async function getRoster(class_id: number): Promise<Student[]> {
+    try {
+      const response = await fetch("http://localhost:5000/classrooms/" + class_id)
+      const students: Student[] = await response.json()
+  
+      return students
+    } catch (error) {
+      console.error("Error fetching classroom roster:", error)
+      return []
+    }
+  }
+  
+  async function addStudent() {
+    const postData = {
+      id: "3333",
+      first_name: "Peter",
+      last_name: "Porker",
+      status: Status.PRESENT
+    }
+  
+    fetch("http://localhost:5000/students",
+      {
+        method: "POST",
+        headers: {"Content-Type" : "application/json"},
+        body: JSON.stringify(postData)
+      },
+    )
+    .then(response => response.json())
+    .then(data => {
+      console.log("Response from server: ", data)
+    })
+    .catch( error => {
+      console.error("Error in student POST: ", error)
+    })
+  }
+  
+  async function updateStatus(id: number) {
+    fetch("http://localhost:5000/students",
+      {
+        method: "POST",
+        headers: {"Content-Type" : "application/json"},
+        body: JSON.stringify(id)
+      },
+    )
+    .then(response => response.json())
+    .then(data => {
+      console.log("Response from server: ", data)
+    })
+    .catch( error => {
+      console.error("Error in update POST: ", error)
+    })
+  }
+  
+  async function getStudent(id: string) {
+    fetch(`http://localhost:5000/students`,
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json"}
+      }
+    )
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+    })
   }
 }
 
