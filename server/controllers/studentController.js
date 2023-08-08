@@ -1,4 +1,5 @@
 const connection = require("../services/db")
+const express = require('express')
 
 /* All students in database */
 exports.getAllStudents = (request, response) => {
@@ -38,11 +39,22 @@ exports.addStudent = (request, response) => {
     return
 }
 
-/* Update existing student */
-exports.updateStudent = (request, response) => {
+/* Update existing student's status */
+exports.updateStatus = (request, response) => {
     const sql = `UPDATE students
                  SET status = ?
                  WHERE id = ?`
 
-    connection.query(sql, [request.body.status, request.body.id])
+    console.log(request.params.id)
+    console.log(request.body)
+
+    connection.query(sql, [request.body.status, request.params.id], (error) => {
+        if (error) {
+            console.error("PUT error in /students: ", error);
+            response.status(500).json({ error: "Failed to update status." });
+        } else {
+            console.log("Update successful");
+            response.status(200).json({ message: "Status updated successfully." });
+        }
+    })
 }

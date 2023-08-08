@@ -90,37 +90,6 @@ function App() {
       console.error("Error in student POST: ", error)
     })
   }
-  
-  async function updateStatus(id: number) {
-    fetch("http://localhost:5000/students",
-      {
-        method: "POST",
-        headers: {"Content-Type" : "application/json"},
-        body: JSON.stringify(id)
-      },
-    )
-    .then(response => response.json())
-    .then(data => {
-      console.log("Response from server: ", data)
-    })
-    .catch( error => {
-      console.error("Error in update POST: ", error)
-    })
-  }
-  
-  async function getStudent(id: string) {
-    fetch(`http://localhost:5000/students`,
-    {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json"}
-      }
-    )
-    .then(response => response.json())
-    .then(data => {
-      console.log(data)
-    })
-  }
 }
 
 export default App

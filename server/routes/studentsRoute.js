@@ -8,6 +8,6 @@ router.route("/")
     
 router.route("/:id")
     .get(studentController.getStudent)
-    .put(studentController.updateStudent)
+    .put(studentController.updateStatus)
 
 module.exports = router

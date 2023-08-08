@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import Button from './Button.tsx';
-import { TimerComponent } from './Timer.tsx';
+import { useEffect, useState } from 'react'
+import Button from './Button.tsx'
+import { TimerComponent } from './Timer.tsx'
 
 enum Status {
     PRESENT = "PRESENT",
@@ -23,6 +23,10 @@ interface RosterRowProp {
 const StudentRosterRow = ( prop: RosterRowProp ) => {
     const [student, setStudent] = useState<Student>(prop.student)
 
+    useEffect( () => {
+        console.log("Student re-render")
+    }, [student])
+
     return (
         <>
             <td>{student.id}</td>
@@ -34,11 +38,37 @@ const StudentRosterRow = ( prop: RosterRowProp ) => {
                 </div>
                 <div style={{flexShrink: "0"}}>
                     { student.status === Status.CHECKED_OUT && <TimerComponent/> }
-                    { student.status === Status.PRESENT && <Button label="Check Out" onClick={ () => {prop.toggleStatus(student.id)} } /> }
+                    {
+                        student.status !== Status.CHECKED_OUT &&
+                        <Button label="Check Out" onClick={ () => {toggleStatus(student.id)} } />
+                    }
                 </div>
             </td>
         </>
-    );
+    )
+
+    /* API Requests */
+    async function updateStatus(id: string, status: Status) {
+        setStudent({...student, status: status})
+        fetch(`http://localhost:5000/students/${id}`,
+            {
+                method: "PUT",
+                headers: {"Content-Type" : "application/json"},
+                body: JSON.stringify( {status: status} )
+            }
+        )
+        .then(response => response.json())
+        .then((data) => {console.log(data)})
+    }
+
+    function toggleStatus(id: string) {
+        if (student.status === Status.ABSENT) {
+            updateStatus(id, Status.PRESENT)
+        }
+        else {
+            updateStatus(id, Status.ABSENT)
+        }
+    }
 }
 
 export { Status, StudentRosterRow }
