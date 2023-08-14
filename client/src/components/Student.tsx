@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Button from './Button.tsx'
 import { TimerComponent } from './Timer.tsx'
+import StatusButton from './Status_Button.tsx'
 
 enum Status {
     PRESENT = "PRESENT",
@@ -23,10 +24,6 @@ interface RosterRowProp {
 const StudentRosterRow = ( prop: RosterRowProp ) => {
     const [student, setStudent] = useState<Student>(prop.student)
 
-    useEffect( () => {
-        console.log("Student re-render")
-    }, [student])
-
     return (
         <>
             <td>{student.id}</td>
@@ -41,6 +38,7 @@ const StudentRosterRow = ( prop: RosterRowProp ) => {
                     {
                         student.status !== Status.CHECKED_OUT &&
                         <Button label="Check Out" onClick={ () => {toggleStatus(student.id)} } />
+                        && <StatusButton/>
                     }
                 </div>
             </td>
