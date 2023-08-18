@@ -11,8 +11,9 @@ function Instructor_User_Page() {
   const [displayedClass, setDisplayedClass] = React.useState<Classroom | null>(null)
 
   React.useEffect( () => {
+    console.log("Gotten classrooms")
     getClassrooms()
-  }, [])
+  }, [studentList])
 
   return (
     <div className="main">
@@ -26,14 +27,14 @@ function Instructor_User_Page() {
           {
             classrooms.map( classroom =>
               <li key={classroom.id}>
-                <a className="dropdown-item" href="#" onClick={() => setDisplayedClass(classroom)}>
+                <a className="dropdown-item" onClick={() => setDisplayedClass(classroom)}>
                   {classroom.name}
                 </a>
               </li>
             )
           }
           <li><hr className="dropdown-divider"/></li>
-          <li><a className="dropdown-item" href="#">Show full student list</a></li>
+          <li><a className="dropdown-item">Show full student list</a></li>
         </ul>
       </div>
       
@@ -45,15 +46,11 @@ function Instructor_User_Page() {
   )
 
   /* Callbacks */
-  function toggleStatus(id: string) {
+  function toggleStatus(id: string, status: Status) {
+    console.log("prop")
     let newList = studentList.map( student => {
       if (student.id === id) {
-        if (student.status === Status.PRESENT) {
-          student.status = Status.CHECKED_OUT
-        }
-        else if (student.status === Status.CHECKED_OUT) {
-          student.status = Status.PRESENT
-        }
+        student.status = status
       }
       return student
     })

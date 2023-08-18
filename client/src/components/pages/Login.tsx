@@ -1,27 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 function Login() {
-  const [username, setUsername] = React.useState<string>("")
-  const [password, setPassword] = React.useState<string>("")
+  const [loginInfo, setLoginInfo] = React.useState({
+    username: "",
+    password: ""
+  })
+
+  useEffect( () => {
+    console.log(loginInfo)
+  }, [loginInfo])
+
+  function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    let username = (e.currentTarget.elements.namedItem('username') as HTMLInputElement).value
+    let password = (e.currentTarget.elements.namedItem('password') as HTMLInputElement).value
+
+    setLoginInfo({username, password})
+  }
 
   return (
     <>
-      <form>
+      <form onSubmit={ e => handleLogin(e)}>
         <div className="form-group">
-          <label htmlFor="exampleInputEmail1">Username</label>
-          <input type="email" className="form-control" id="exampleInputEmail1"
-                 aria-describedby="emailHelp" placeholder="Enter email" />
-          <small id="emailHelp" className="form-text text-muted">
-            We'll never share your email with anyone else.
-          </small>
+          <label>Username</label>
+          <input name="username" type="text" className="form-control" placeholder="Username" required/>
         </div>
         <div className="form-group">
-          <label htmlFor="exampleInputPassword1">Password</label>
-          <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" />
-        </div>
-        <div className="form-check">
-          <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-          <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
+          <label>Password</label>
+          <input name="password" type="password" className="form-control" placeholder="Password" required/>
         </div>
         <button type="submit" className="btn btn-primary">Submit</button>
       </form>

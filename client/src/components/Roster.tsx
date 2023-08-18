@@ -4,15 +4,20 @@ import { Student, Status, StudentRosterRow } from './Student.tsx'
 
 interface RosterProp {
     classroom: Classroom
-    toggleStatus: (user_id: string) => void
+    toggleStatus: (user_id: string, status: Status) => void
 }
 
 function Roster({classroom, toggleStatus}: RosterProp) {
     const [studentList, setStudentList] = useState<Student[]>([])
 
     useEffect( () => {
+        console.log("Roster effect")
         getRoster(classroom.id)
     }, [classroom])
+
+    useEffect( () => {
+        console.log(studentList)
+    }, [studentList])
     
     function checkRoster() {
         return studentList.length === 0 && (
@@ -20,6 +25,11 @@ function Roster({classroom, toggleStatus}: RosterProp) {
                 <p>No students on roster</p>
             </>
         )
+    }
+
+    function testStudent() {
+        console.log("Test Student")
+        return <></>
     }
 
     return (
@@ -37,14 +47,10 @@ function Roster({classroom, toggleStatus}: RosterProp) {
                     </tr>
                 </thead>
                 <tbody>
+                    {testStudent()}
                     {
                         studentList.map((student) =>
-                        <tr
-                            key={student.id}
-                            className={student.status === Status.CHECKED_OUT ? "table-warning" : ""}
-                        >
-                            {<StudentRosterRow student={student} toggleStatus={toggleStatus}/>}
-                        </tr>
+                            <StudentRosterRow p_student={student} toggleStatus={toggleStatus}/>
                         )
                     }
                 </tbody>

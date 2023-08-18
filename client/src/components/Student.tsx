@@ -1,7 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from './Button.tsx'
 import { TimerComponent } from './Timer.tsx'
-import StatusButton from './Status_Button.tsx'
 
 enum Status {
     PRESENT = "PRESENT",
@@ -17,37 +16,55 @@ interface Student {
 }
 
 interface RosterRowProp {
-    student: Student
-    toggleStatus: (user_id: string) => void
+    p_student: Student
+    toggleStatus: (user_id: string, status: Status) => void
 }
 
-const StudentRosterRow = ( prop: RosterRowProp ) => {
-    const [student, setStudent] = useState<Student>(prop.student)
+function StudentRosterRow( {p_student, toggleStatus}: RosterRowProp ) {
+    const [student, setStudent] = useState<Student>(p_student)
+
+    useEffect( () => {
+        setStudent(p_student)
+    }, [p_student])
 
     return (
         <>
-            <td>{student.id}</td>
-            <td>{student.first_name}</td>
-            <td>{student.last_name}</td>
-            <td className="roster-row" style={{fontStyle: "italic"}}>
-                <div>
-                    { student.status }
-                </div>
-                <div style={{flexShrink: "0"}}>
-                    { student.status === Status.CHECKED_OUT && <TimerComponent/> }
-                    {
-                        student.status !== Status.CHECKED_OUT &&
-                        <Button label="Check Out" onClick={ () => {toggleStatus(student.id)} } />
-                        && <StatusButton/>
-                    }
-                </div>
-            </td>
+            <tr
+                key={student.id}
+                className={student.status === Status.CHECKED_OUT ? "table-warning" : ""}
+            >
+                <td>{student.id}</td>
+                <td>{student.first_name}</td>
+                <td>{student.last_name}</td>
+                <td className="roster-row" style={{fontStyle: "italic"}}>
+                    <div>
+                        { student.status }
+                    </div>
+                    <div style={{flexShrink: "0"}}>
+                        { student.status === Status.CHECKED_OUT && <TimerComponent onPress={checkin}/> }
+                        {
+                            student.status !== Status.CHECKED_OUT &&
+                            <Button label="Check Out" onClick={ checkout } />
+                        }
+                    </div>
+                </td>
+            </tr>
         </>
     )
+
+    /* Functions */
+    function checkout() {
+        updateStatus(student.id, Status.CHECKED_OUT)
+    }
+
+    function checkin() {
+        updateStatus(student.id, Status.PRESENT)
+    }
 
     /* API Requests */
     async function updateStatus(id: string, status: Status) {
         setStudent({...student, status: status})
+        toggleStatus(id, status)
         fetch(`http://localhost:5000/students/${id}`,
             {
                 method: "PUT",
@@ -57,15 +74,6 @@ const StudentRosterRow = ( prop: RosterRowProp ) => {
         )
         .then(response => response.json())
         .then((data) => {console.log(data)})
-    }
-
-    function toggleStatus(id: string) {
-        if (student.status === Status.ABSENT) {
-            updateStatus(id, Status.PRESENT)
-        }
-        else {
-            updateStatus(id, Status.ABSENT)
-        }
     }
 }
 
