@@ -73,19 +73,6 @@ function Dashboard() {
                   </a>
                 </li>
               </ul>
-              
-              <div className="dropdown">
-                <a href="#" className="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  <strong>mdo</strong>
-                </a>
-                <ul className="dropdown-menu dropdown-menu-dark text-small shadow">
-                  <li><a className="dropdown-item" href="#">New project...</a></li>
-                  <li><a className="dropdown-item" href="#">Settings</a></li>
-                  <li><a className="dropdown-item" href="#">Profile</a></li>
-                  <li><hr className="dropdown-divider" /></li>
-                  <li><a className="dropdown-item" href="#">Sign out</a></li>
-                </ul>
-              </div>
         </section>
 
         <aside className="right-sidebar">Right sidebar</aside>
@@ -150,22 +137,23 @@ function Dashboard() {
       return (
         <>
           <table className="table table-striped table-hover">
-                <thead>
-                    <tr className="table-dark">
-                      <th scope="col">ID</th>
-                      <th scope="col">First Name</th>
-                      <th scope="col">Last Name</th>
-                      <th scope="col">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {
-                  studentList.map( student =>
-                    <StudentRosterRow p_student={student} toggleStatus={() => {}}/>
-                  )
-                }
-                </tbody>
-            </table>
+            <thead>
+                <tr className="table-dark">
+                  <th scope="col">ID</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            {studentList.length === 0 && <p style={{padding: "1rem"}}>No students on roster</p>}
+            {
+              studentList.map( student =>
+                <StudentRosterRow p_student={student} toggleStatus={() => {}}/>
+              )
+            }
+            </tbody>
+          </table>
         </>
       )
     }
