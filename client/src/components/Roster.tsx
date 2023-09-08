@@ -11,13 +11,8 @@ function Roster({classroom, toggleStatus}: RosterProp) {
     const [studentList, setStudentList] = useState<Student[]>([])
 
     useEffect( () => {
-        console.log("Roster effect")
         getRoster(classroom.id)
     }, [classroom])
-
-    useEffect( () => {
-        console.log(studentList)
-    }, [studentList])
     
     function checkRoster() {
         return studentList.length === 0 && (
@@ -25,11 +20,6 @@ function Roster({classroom, toggleStatus}: RosterProp) {
                 <p>No students on roster</p>
             </>
         )
-    }
-
-    function testStudent() {
-        console.log("Test Student")
-        return <></>
     }
 
     return (
@@ -47,7 +37,6 @@ function Roster({classroom, toggleStatus}: RosterProp) {
                     </tr>
                 </thead>
                 <tbody>
-                    {testStudent()}
                     {
                         studentList.map((student) =>
                             <StudentRosterRow p_student={student} toggleStatus={toggleStatus}/>

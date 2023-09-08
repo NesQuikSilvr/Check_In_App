@@ -52,11 +52,13 @@ function TimerComponent({onPress}: TCProp) {
     }
 
     const resetTimer = () => {
+        console.log('Reset timer')
         setTimerActive(false);
         clearInterval(timer);
     }
 
     const toggleTimer = () => {
+        console.log('toggle timer')
         if (timerIsActive) {
             resetTimer();
         }
@@ -67,8 +69,8 @@ function TimerComponent({onPress}: TCProp) {
 
     useEffect(() => {
         if (currentTime > expiration) {
-            console.log("Timer expired at: " + new Date().toLocaleTimeString());
-            resetTimer();
+            //console.log("Timer expired at: " + new Date().toLocaleTimeString());
+            //resetTimer();
         }
     }, [currentTime]);
 
