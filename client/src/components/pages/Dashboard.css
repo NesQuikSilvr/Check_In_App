@@ -19,7 +19,7 @@ html {
 
 /* assign columns to grid areas */
 .header {
-    padding: 25px;
+    padding: 1rem;
     grid-area:header;
     background:#181b1e;
 }

@@ -28,28 +28,23 @@ function StudentRosterRow( {p_student, toggleStatus}: RosterRowProp ) {
     }, [p_student])
 
     return (
-        <>
-            <tr
-                key={student.id}
-                className={student.status === Status.CHECKED_OUT ? "table-warning" : ""}
-            >
-                <td>{student.id}</td>
-                <td>{student.first_name}</td>
-                <td>{student.last_name}</td>
-                <td className="roster-row" style={{fontStyle: "italic"}}>
-                    <div>
-                        { student.status }
-                    </div>
-                    <div style={{flexShrink: "0"}}>
-                        { student.status === Status.CHECKED_OUT && <TimerComponent onPress={checkin}/> }
-                        {
-                            student.status !== Status.CHECKED_OUT &&
-                            <Button label="Check Out" onClick={ checkout } />
-                        }
-                    </div>
-                </td>
-            </tr>
-        </>
+        <tr key={student.id} className={student.status === Status.CHECKED_OUT ? "table-warning" : ""}>
+            <td>{student.id}</td>
+            <td>{student.first_name}</td>
+            <td>{student.last_name}</td>
+            <td className="roster-row" style={{fontStyle: "italic"}}>
+                <div>
+                    { student.status }
+                </div>
+                <div style={{flexShrink: "0"}}>
+                    { student.status === Status.CHECKED_OUT && <TimerComponent onPress={checkin}/> }
+                    {
+                        student.status !== Status.CHECKED_OUT &&
+                        <Button label="Check Out" onClick={ checkout } />
+                    }
+                </div>
+            </td>
+        </tr>
     )
 
     /* Functions */
